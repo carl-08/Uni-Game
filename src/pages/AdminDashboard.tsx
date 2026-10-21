@@ -52,6 +52,14 @@ export default function AdminDashboard() {
     return () => {alive=false;subscription.unsubscribe();};
   }, []);
 
+  // Refresh player and match records periodically while the admin dashboard is open.
+  // This makes registrations from another browser appear without a manual refresh.
+  useEffect(() => {
+    if (!isAdmin) return;
+    const timer = window.setInterval(() => { void loadData(); }, 10000);
+    return () => window.clearInterval(timer);
+  }, [isAdmin]);
+
   const signIn = async () => {
     if(!supabase || !email.trim() || !password) return;
     setBusy('login'); setMessage('');
