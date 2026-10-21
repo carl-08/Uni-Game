@@ -1,4 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import AdminDashboard from './pages/AdminDashboard';
+import { supabase } from './lib/supabase';
 import PlayerProfileButton from './components/PlayerProfileButton';
 import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, CircleHelp, Clock3, Gamepad2, Heart, Lightbulb, LockKeyhole, Menu, Plus, Search, Sparkles, Users, X, Zap } from 'lucide-react';
 
@@ -22,8 +24,12 @@ function App() {
   const [roomCode, setRoomCode] = useState('');
   const [roomName, setRoomName] = useState('');
   const [toast, setToast] = useState('');
-  const visible = useMemo(() => games.filter(g => (filter === 'All games' || g.category === filter) && (g.name + g.description + g.category).toLowerCase().includes(search.toLowerCase())), [filter, search]);
+  const [disabledGames, setDisabledGames] = useState<string[]>([]);
+  useEffect(() => { if (!supabase) return; let alive = true; supabase.from('game_controls').select('game_key,enabled').then(({data}) => { if (alive && data) setDisabledGames(data.filter(row => !row.enabled).map(row => row.game_key)); }); return () => { alive = false; }; }, []);
+  const gameKeys: Record<string,string> = { 'Imposter':'imposter','Family Trivia':'family_trivia','Picture Clues':'picture_clues','Push Your Luck':'push_your_luck','Charades':'charades','Draw & Guess':'draw_guess','Word Spy':'word_spy','Railway Rush':'railway_rush' };
+  const visible = useMemo(() => games.filter(g => !disabledGames.includes(gameKeys[g.name]) && (filter === 'All games' || g.category === filter) && (g.name + g.description + g.category).toLowerCase().includes(search.toLowerCase())), [filter, search, disabledGames]);
   const closeModal = () => { setModal(null); setRoomCode(''); setRoomName(''); };
+  if (window.location.pathname.replace(/\\/$/, '').endsWith('/admin')) return <AdminDashboard />;
   const submitRoom = () => { setToast(modal === 'create' ? 'Room setup preview — multiplayer is coming next.' : 'Room join preview — live rooms are coming next.'); closeModal(); window.setTimeout(() => setToast(''), 4000); };
   return <main>
     <nav className="nav wrap"><a className="brand" href="#"><span className="brand-mark"><Gamepad2 size={21}/></span><span>gather<span className="brand-dot">.</span></span></a><div className="nav-links"><a href="#games">Explore games</a><a href="#how">How it works</a></div><div className="nav-actions"><PlayerProfileButton/><button className="btn btn-quiet" onClick={() => setModal('join')}>Join a room</button><button className="btn btn-primary" onClick={() => setModal('create')}><Plus size={17}/> Create room</button></div><button className="mobile-menu" aria-label="Open menu" onClick={() => setModal('join')}><Menu/></button></nav>
