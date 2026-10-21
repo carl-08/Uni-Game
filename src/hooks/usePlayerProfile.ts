@@ -39,6 +39,7 @@ export function usePlayerProfile() {
         activeUser = anon.user;
       }
       if (!alive) return;
+      if (!activeUser) { setError('Could not establish a guest session. Please refresh and try again.'); setLoading(false); return; }
       setUser(activeUser); await loadProfile(activeUser); if (alive) setLoading(false);
     });
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
