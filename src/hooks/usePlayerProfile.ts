@@ -28,13 +28,14 @@ export function usePlayerProfile() {
   }, []);
 
   useEffect(() => {
-    if (!supabase) { setLoading(false); return; }
+    const client = supabase;
+    if (!client) { setLoading(false); return; }
     let alive = true;
-    supabase.auth.getSession().then(async ({ data }) => {
+    client.auth.getSession().then(async ({ data }) => {
       if (!alive) return;
       let activeUser = data.session?.user ?? null;
       if (!activeUser) {
-        const { data: anon, error: authError } = await supabase.auth.signInAnonymously();
+        const { data: anon, error: authError } = await client.auth.signInAnonymously();
         if (authError) { setError('Enable Anonymous Sign-Ins in Supabase Auth to use guest profiles.'); setLoading(false); return; }
         activeUser = anon.user;
       }
@@ -42,7 +43,7 @@ export function usePlayerProfile() {
       if (!activeUser) { setError('Could not establish a guest session. Please refresh and try again.'); setLoading(false); return; }
       setUser(activeUser); await loadProfile(activeUser); if (alive) setLoading(false);
     });
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: listener } = client.auth.onAuthStateChange((_event, session) => {
       if (!alive) return;
       const activeUser = session?.user ?? null; setUser(activeUser);
       if (activeUser) void loadProfile(activeUser).finally(() => { if (alive) setLoading(false); }); else setProfile(null);
