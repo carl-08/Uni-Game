@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ChevronDown, CircleHelp, Clock3, Gamepad2, Grid2X2, Heart, Lightbulb, LockKeyhole, Menu, Plus, Search, Sparkles, Users, X, Zap } from 'lucide-react';
+import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, CircleHelp, Clock3, Gamepad2, Heart, Lightbulb, LockKeyhole, Menu, Plus, Search, Sparkles, Users, X, Zap } from 'lucide-react';
 
 type Game = { name: string; category: string; players: string; time: string; description: string; color: string; art: string; tag?: string };
 const games: Game[] = [
