@@ -21,7 +21,7 @@ create policy "Admins can read own admin membership" on public.admin_users
  for select to authenticated using ((select auth.uid()) = user_id);
 drop policy if exists "Authenticated users can view game availability" on public.game_controls;
 create policy "Authenticated users can view game availability" on public.game_controls
- for select to authenticated using (true);
+ for select to anon, authenticated using (true);
 drop policy if exists "Admins can update game availability" on public.game_controls;
 create policy "Admins can update game availability" on public.game_controls
  for update to authenticated using (
@@ -36,5 +36,5 @@ drop policy if exists "Admins can read all game history" on public.game_history;
 create policy "Admins can read all game history" on public.game_history for select to authenticated
  using (exists (select 1 from public.admin_users a where a.user_id = (select auth.uid())));
 grant select on public.admin_users to authenticated;
-grant select on public.game_controls to authenticated;
+grant select on public.game_controls to anon, authenticated;
 grant update on public.game_controls to authenticated;
