@@ -15,6 +15,43 @@ function logSupabaseError(error: { code?: string; message: string }) {
   console.error('[Gather] Supabase error', { code: error.code, message });
 }
 
+function authErrorMessage(error: { code?: string; message: string; name?: string }, action: 'link' | 'sign-in') {
+  logSupabaseError(error);
+  const code = error.code?.toLowerCase() || '';
+  const message = error.message.toLowerCase();
+  if (code === 'email_exists' || code === 'identity_already_exists' || code === 'user_already_exists' || message.includes('already registered') || message.includes('already been registered')) {
+    return 'That email is already linked to another account. Use “Sign in with existing email” to access it; accounts and profiles will not be merged.';
+  }
+  if (code.includes('rate_limit') || code.includes('too_many') || message.includes('rate limit') || message.includes('too many requests')) {
+    return 'Too many email requests. Please wait a little while before trying again.';
+  }
+  if (code.includes('expired') || code === 'otp_expired' || message.includes('expired') || message.includes('invalid token')) {
+    return 'This link or session has expired. Request a new email link and try again.';
+  }
+  if (code === 'user_not_found' || message.includes('user not found')) {
+    return 'No account was found for that email. Guest profiles must be linked from the browser where they were created.';
+  }
+  if (code === 'email_not_confirmed') {
+    return 'Confirm your email using the link we sent before signing in.';
+  }
+  if (error.name === 'AuthSessionMissingError') {
+    return 'Your guest session has expired. Return to the browser where you played to link this profile.';
+  }
+  return action === 'link'
+    ? 'Could not link that email to this guest profile. Please try again.'
+    : 'Could not send a sign-in link. Check the email and try again.';
+}
+
+function authCallbackError() {
+  const params = new URLSearchParams(window.location.search);
+  const hashParams = new URLSearchParams(window.location.hash.slice(1));
+  const code = (params.get('error_code') || hashParams.get('error_code') || params.get('error') || hashParams.get('error') || '').toLowerCase();
+  if (!code) return '';
+  if (code.includes('expired') || code === 'otp_expired') return 'This email link has expired. Request a new link and try again.';
+  if (code.includes('rate_limit')) return 'Too many email requests. Please wait a little while before trying again.';
+  return 'This email link could not be verified. It may have expired or already been used. Request a new link and try again.';
+}
+
 export function usePlayerProfile() {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<PlayerProfile | null>(() => localProfile());
@@ -47,7 +84,9 @@ export function usePlayerProfile() {
     let alive = true;
     client.auth.getSession().then(async ({ data, error: sessionError }) => {
       if (!alive) return;
-      if (sessionError) { logSupabaseError(sessionError); setError('Could not check your sign-in session. Please refresh and try again.'); setLoading(false); return; }
+      const callbackError = authCallbackError();
+      if (callbackError) setError(callbackError);
+      if (sessionError) { setError(authErrorMessage(sessionError, 'sign-in')); setLoading(false); return; }
       let activeUser = data.session?.user ?? null;
       if (!activeUser) {
         const { data: anon, error: authError } = await client.auth.signInAnonymously();
@@ -85,17 +124,38 @@ export function usePlayerProfile() {
     setProfile(data as PlayerProfile); localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); return true;
   }, []);
 
-  const sendMagicLink = useCallback(async (email: string) => {
+  const linkGuestEmail = useCallback(async (email: string) => {
     if (!supabase) { setError('Connect Supabase first to enable account sign-in.'); return false; }
     const cleanEmail = email.trim(); if (!cleanEmail) { setError('Enter your email address.'); return false; }
     setError('');
-    const { error: linkError } = await supabase.auth.updateUser({ email: cleanEmail });
-    if (linkError) {
-      logSupabaseError(linkError);
-      const { error: otpError } = await supabase.auth.signInWithOtp({ email: cleanEmail, options: { emailRedirectTo: window.location.origin + window.location.pathname } });
-      if (otpError) { logSupabaseError(otpError); setError(otpError.message); return false; }
+    const { data, error: authError } = await supabase.auth.getUser();
+    if (authError) { setError(authErrorMessage(authError, 'link')); return false; }
+    if (!data.user?.is_anonymous) {
+      setError('Email linking is only available for a guest profile. Use “Sign in with existing email” for a linked account.');
+      return false;
     }
+    const { error: linkError } = await supabase.auth.updateUser(
+      { email: cleanEmail },
+      { emailRedirectTo: window.location.origin + window.location.pathname },
+    );
+    if (linkError) { setError(authErrorMessage(linkError, 'link')); return false; }
     return true;
   }, []);
-  return { user, profile, loading, error, configured, saveProfile, sendMagicLink };
+
+  const signInWithEmail = useCallback(async (email: string) => {
+    if (!supabase) { setError('Connect Supabase first to enable account sign-in.'); return false; }
+    const cleanEmail = email.trim(); if (!cleanEmail) { setError('Enter your email address.'); return false; }
+    setError('');
+    const { error: signInError } = await supabase.auth.signInWithOtp({
+      email: cleanEmail,
+      options: {
+        emailRedirectTo: window.location.origin + window.location.pathname,
+        shouldCreateUser: false,
+      },
+    });
+    if (signInError) { setError(authErrorMessage(signInError, 'sign-in')); return false; }
+    return true;
+  }, []);
+
+  return { user, profile, loading, error, configured, saveProfile, linkGuestEmail, signInWithEmail };
 }

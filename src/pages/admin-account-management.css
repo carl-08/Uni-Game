@@ -1,0 +1,75 @@
+.admin-account-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-account-search .admin-search {
+  width: min(320px, 40vw);
+}
+
+.account-status {
+  display: inline-flex;
+  border: 1px solid #465238;
+  border-radius: 99px;
+  padding: 5px 9px;
+  color: var(--lime);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.account-status.banned {
+  border-color: #7a493f;
+  color: #f0a28d;
+}
+
+.account-status.deleted {
+  border-color: #55564f;
+  color: #a2a49a;
+}
+
+.account-reason,
+.account-id,
+.account-muted {
+  display: block;
+  margin-top: 5px;
+  color: #83877b;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  max-width: 240px;
+}
+
+.account-id {
+  max-width: 200px;
+}
+
+.account-actions {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.btn-danger {
+  color: #f0a28d;
+  background: transparent;
+  border-color: #75473e;
+}
+
+.btn-danger:hover {
+  border-color: #e48773;
+}
+
+.admin-panel-title .admin-account-search .btn {
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .admin-account-search {
+    width: 100%;
+  }
+
+  .admin-account-search .admin-search {
+    width: 100%;
+  }
+}
