@@ -33,10 +33,11 @@ Without Supabase credentials, profile edits are saved only in the current browse
 
 1. Run `supabase/admin_schema.sql` after `supabase/schema.sql` and make sure at least one trusted administrator UUID is in `public.admin_users`.
 2. Apply `supabase/migrations/20261022130000_account_management.sql` in the Supabase SQL Editor. This creates persistent bans and audit records, locks down their tables, adds Auth token and database ban enforcement, and adds a service-role-only account search/action RPC. Do not grant clients access to these tables or functions.
-3. Install the Supabase CLI, authenticate with `npx supabase login`, and link the project with `npx supabase link --project-ref YOUR_PROJECT_REF`.
-4. Deploy the trusted function with `npx supabase functions deploy admin-accounts`. The function requires JWT verification and uses Supabase's server-provided `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`; never copy the service-role key into Vite variables, GitHub Pages secrets, or frontend code.
-5. In Supabase Dashboard -> Authentication -> Hooks, enable the **Custom Access Token Hook** and select `public.reject_banned_user_token`. This blocks banned users from obtaining refreshed Auth tokens. Banned users' existing sessions are also blocked from profile/game-history RLS operations; account bans attempt Auth session revocation through the Admin API.
-6. Test admin list, ban, unban, deletion, and the Auth hook with non-production accounts before using them on production accounts.
+3. Install the Supabase CLI, authenticate with `npx supabase login`, and link this project with `npx supabase link --project-ref nbbtaigwasvulsssktpg`.
+4. Apply the account-management migration with `npx supabase db push --linked`. Review the pending migration list before confirming. This assumes `schema.sql` and `admin_schema.sql` have already been applied to the linked project.
+5. Deploy the trusted function with `npx supabase functions deploy admin-accounts --project-ref nbbtaigwasvulsssktpg`. The function requires JWT verification and uses Supabase's server-provided `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`; never copy the service-role key into Vite variables, GitHub Pages secrets, or frontend code.
+6. In Supabase Dashboard -> Authentication -> Hooks, enable the **Custom Access Token Hook** and select `public.reject_banned_user_token`. This blocks banned users from obtaining new/refreshed Auth tokens. Existing access JWTs may remain valid until expiry, but profile/game-history RLS policies reject banned users. Auth's ban duration also blocks sign-in and refresh; it does not guarantee immediate invalidation of already-issued JWTs.
+7. Test admin list, ban, unban, deletion, and the Auth hook with non-production accounts before using them on production accounts.
 
 Deleting an account deletes the Auth user through the Admin API, which cascades its profile and game-history rows under the existing foreign keys. The separate account audit retains actor ID, target ID, target email snapshot, action, timestamp, reason, and result status. Administrator accounts are protected from these player actions.
 
@@ -55,3 +56,15 @@ Deleting an account deletes the Auth user through the Admin API, which cascades 
 2. Build a shared host display and phone-controller view.
 3. Implement a complete Family Trivia game loop.
 4. Add trusted server-side score validation.
+
+## Rooms and Dreamweaver
+
+Room creation, joining, invitation codes, QR downloads, lobby updates, host controls, and the first playable multiplayer game are implemented locally. Apply `supabase/migrations/20261022150000_rooms_story_game.sql` only after the base schema, admin schema, and account-management migration are installed. This migration adds private room/game tables, member-only lobby reads, and authenticated RPCs for room and game actions. It also adds `dreamweaver` to `game_controls`; admins can then enable or disable it from the existing dashboard.
+
+The room migration uses the Supabase Realtime publication for public room/member changes. Game hands, clues before submission, card ownership during voting, and votes before reveal stay in a table that clients cannot read directly; the `room_state` RPC returns only the caller's hand and phase-appropriate public state. The database calculates scores and writes final results to `game_history`. Host transfers, game changes, room closure, capacity checks, duplicate joins, and game actions are checked in database functions.
+
+Rooms accept new players only while waiting, expire after 12 hours, and close through a host action. Browser disconnects do not count as leaving. A waiting room's host remains host until transfer/closure or expiration. Completed matches remain in `game_history`; an unfinished match closed by its host is retained with the room state but is not recorded as a completed game. Other existing games can be selected for the room, but Dreamweaver is currently the only game with a complete multiplayer loop.
+
+The original 48-card deck is stored as 48 individual SVG illustrations in `public/cards/`. `scripts/generate-story-cards.mjs` regenerates those authored vector scenes from the stable catalog in `src/data/storyCards.ts`.
+
+To validate the local code, run `npm test`, `npm run build`, and `git diff --check`. The account-management and room/game migrations are applied to the configured Supabase project. Test live rooms with at least three separate signed-in browser sessions after the website deployment completes.
