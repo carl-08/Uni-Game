@@ -6,3 +6,59 @@
 
 /* Admin console */
 .admin-shell{min-height:100vh;background:#10110f;color:#f4f2ec;padding:0 28px 60px}.admin-top{height:78px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;max-width:1180px;margin:auto}.admin-top-right{display:flex;align-items:center;gap:9px}.admin-chip,.admin-live{display:inline-flex;align-items:center;gap:7px;color:var(--lime);font-size:12px;border:1px solid #3d482b;padding:8px 11px;border-radius:99px}.admin-main{max-width:1180px;margin:0 auto}.admin-heading{display:flex;align-items:flex-end;justify-content:space-between;padding:42px 0 28px}.admin-heading h1,.admin-login h1{font:600 clamp(38px,5vw,56px)/1 var(--display);letter-spacing:-2.5px;margin:14px 0}.admin-heading h1 span{color:var(--lime)}.admin-heading p,.admin-login>p{color:var(--muted);font-size:14px;line-height:1.7}.admin-live{color:#b9e87b}.admin-live i{width:7px;height:7px;border-radius:50%;background:#b9e87b}.admin-tabs{display:flex;gap:7px;border-bottom:1px solid var(--line);margin-bottom:22px}.admin-tabs button{display:flex;align-items:center;gap:8px;background:none;border:0;border-bottom:2px solid transparent;padding:13px 16px;color:var(--muted);font-weight:600}.admin-tabs button.selected{color:var(--lime);border-bottom-color:var(--lime)}.admin-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}.admin-metrics article{border:1px solid var(--line);background:#171814;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px;min-width:0}.admin-metrics article>svg{color:var(--lime);width:19px}.admin-metrics article>span{font-size:12px;color:var(--muted)}.admin-metrics article>strong{font:600 32px var(--display);letter-spacing:-1px}.admin-metrics article>strong small{font-size:15px;color:var(--muted)}.admin-metrics article>small{font-size:11px;color:#7e8275}.admin-panel{border:1px solid var(--line);border-radius:14px;background:#171814;margin-bottom:18px;overflow:hidden}.admin-panel-title{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:22px 23px;border-bottom:1px solid var(--line)}.admin-panel-title h2{font:600 20px var(--display);margin:0 0 6px}.admin-panel-title p{font-size:12px;color:var(--muted);margin:0}.admin-table-wrap{overflow-x:auto}.admin-table{width:100%;border-collapse:collapse;text-align:left;white-space:nowrap}.admin-table th{font:10px var(--mono);letter-spacing:1px;color:#888c80;padding:14px 22px;background:#141511}.admin-table td{padding:15px 22px;border-top:1px solid #292a25;font-size:13px}.admin-table tbody tr:hover{background:#1d1f19}.admin-player{display:flex;align-items:center;gap:11px}.admin-player>b{display:grid;place-items:center;width:36px;height:36px;background:#292b23;border-radius:11px;font-size:20px}.admin-player span,.admin-player small{display:block}.admin-player small{font-size:10px;color:#83877b;margin-top:4px}.score-cell{color:var(--lime);font-weight:700;font-variant-numeric:tabular-nums}.admin-game-list{padding:0 22px}.admin-game-row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:16px 0;border-bottom:1px solid #2b2c26}.admin-game-row:last-child{border-bottom:0}.admin-game-row>span b,.admin-game-row>span small{display:block}.admin-game-row>span b{font-size:13px}.admin-game-row>span small{font-size:11px;color:var(--muted);margin-top:5px}.admin-toggle{display:flex;align-items:center;gap:7px;background:#282923;color:#b2b5aa;border:1px solid #414239;border-radius:99px;padding:7px 11px;font-size:11px;font-weight:700;min-width:110px;justify-content:center}.admin-toggle.on{background:#29351d;color:var(--lime);border-color:#495b30}.admin-toggle:disabled{opacity:.5;cursor:wait}.admin-search{width:min(250px,45vw);border:1px solid #414239;background:#10110f;border-radius:8px;padding:10px 12px;color:#fff}.admin-footnote{color:#82867b;font-size:11px;padding:8px 0}.admin-footnote code{color:#c4c9b5}.admin-message{border:1px solid #715b2b;background:#292315;color:#f5d58a;padding:13px 15px;border-radius:10px;font-size:13px;line-height:1.5;margin:15px 0}.admin-shell .admin-back{display:inline-flex;align-items:center;gap:7px;margin:25px 0;color:var(--muted);font-size:13px}.admin-login{width:min(460px,100%);margin:7vh auto;border:1px solid var(--line);background:#171814;padding:34px;border-radius:18px}.admin-brand{display:flex;align-items:center;gap:10px;color:var(--lime);font:700 12px var(--mono);letter-spacing:1px}.admin-brand span{color:#9da191;border:1px solid #3d4035;padding:4px 6px;border-radius:5px;font-size:9px}.admin-login h1{margin-top:28px}.admin-login .field-label{display:block;margin:25px 0 15px}.admin-login .field-label input{display:block;width:100%;margin-top:8px;border:1px solid #414239;background:#10110f;color:white;border-radius:9px;padding:13px}.admin-login .full-btn{width:100%}.admin-hint{display:block;color:#a9ad9f;line-height:1.6;margin-top:15px;overflow-wrap:anywhere}.admin-login .admin-message{overflow-wrap:anywhere}@media(max-width:760px){.admin-shell{padding:0 16px 40px}.admin-top{height:auto;min-height:72px;gap:10px}.admin-top-right{gap:5px}.admin-top-right .btn{padding:8px;font-size:11px}.admin-chip{display:none}.admin-heading{align-items:flex-start;gap:12px;flex-direction:column;padding:30px 0 20px}.admin-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.admin-metrics article{padding:15px}.admin-metrics article>strong{font-size:27px}.admin-panel-title{padding:17px;align-items:flex-start;flex-direction:column}.admin-game-list{padding:0 16px}.admin-login{padding:25px}.admin-tabs button{padding:12px 10px;font-size:12px}}
+/* Small-screen refinements for the public landing page and admin console. */
+@media(max-width:600px){
+  .admin-shell{padding:0 12px calc(28px + env(safe-area-inset-bottom))}
+  .admin-top{min-height:62px;flex-wrap:wrap;padding:8px 0}
+  .admin-top>.brand{font-size:20px}
+  .admin-top-right{gap:5px}
+  .admin-top-right .btn{min-height:40px;padding:8px;font-size:10px}
+  .admin-top-right .btn svg{width:14px}
+  .admin-heading h1{font-size:clamp(36px,11vw,48px);letter-spacing:-2px}
+  .admin-heading p{font-size:12px;line-height:1.55}
+  .admin-live{font-size:10px;padding:7px 9px}
+  .admin-tabs{overflow-x:auto;scrollbar-width:none;gap:2px;margin-right:-12px;padding-right:12px}
+  .admin-tabs::-webkit-scrollbar{display:none}
+  .admin-tabs button{flex:0 0 auto;min-height:46px;padding:10px 11px;font-size:11px}
+  .admin-metrics article{padding:12px;gap:7px;border-radius:11px}
+  .admin-metrics article>span{font-size:10px;line-height:1.3}
+  .admin-metrics article>strong{font-size:24px;overflow-wrap:anywhere}
+  .admin-metrics article>small{font-size:9px;line-height:1.4}
+  .admin-panel-title{padding:15px;gap:12px}
+  .admin-panel-title h2{font-size:18px}
+  .admin-panel-title p{font-size:11px;line-height:1.5}
+  .admin-panel-title .text-link{margin-left:0}
+  .admin-table-wrap{overscroll-behavior-x:contain}
+  .admin-table{min-width:600px}
+  .admin-table th,.admin-table td{padding:12px 13px}
+  .admin-table td{font-size:12px}
+  .admin-player{gap:8px;max-width:220px}
+  .admin-player>b{width:32px;height:32px;flex:0 0 32px}
+  .admin-player span{min-width:0;overflow-wrap:anywhere;white-space:normal}
+  .admin-player small{overflow-wrap:anywhere}
+  .admin-game-list{padding:0 14px}
+  .admin-game-row{gap:9px}
+  .admin-game-row>span{min-width:0}
+  .admin-game-row>span b{font-size:12px}
+  .admin-toggle{min-width:96px;padding:8px;font-size:10px}
+  .admin-login{margin:4vh auto;padding:22px 18px}
+  .admin-login h1{font-size:38px;letter-spacing:-1.8px}
+  .admin-login>p{font-size:12px}
+  .admin-account-search{grid-template-columns:minmax(0,1fr) auto;gap:6px}
+  .admin-account-search .btn{padding:9px;font-size:10px}
+  .account-actions .btn{min-height:40px}
+  .toast{bottom:calc(12px + env(safe-area-inset-bottom))}
+}
+@media(max-width:380px){
+  .wrap{width:calc(100% - 26px)}
+  .hero h1{font-size:54px;letter-spacing:-3px}
+  .hero-buttons .btn{font-size:10px;padding:13px 8px}
+  .game-grid{grid-template-columns:1fr}
+  .game-art{height:170px}
+  .game-info p{min-height:0}
+  .stats strong{font-size:22px}
+  .admin-shell{padding-right:9px;padding-left:9px}
+  .admin-metrics{gap:7px}
+  .admin-metrics article{padding:10px}
+  .room-control-buttons .btn{flex-basis:100%}
+}
