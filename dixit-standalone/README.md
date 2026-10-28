@@ -46,7 +46,12 @@ npm run build
 npm run preview
 ```
 
-The local demo remains available when the online environment values are absent. The GitHub Pages build also needs the standalone `VITE_DIXIT_SUPABASE_URL` and `VITE_DIXIT_SUPABASE_ANON_KEY` values set for its build step to enable online rooms; without them, the hosted page still runs the local demo.
+The local demo remains available when the online environment values are absent. To enable online rooms on GitHub Pages, add these two repository Actions secrets using values from the standalone Supabase project, then rerun the Pages workflow:
+
+- `VITE_DIXIT_SUPABASE_URL`
+- `VITE_DIXIT_SUPABASE_ANON_KEY`
+
+Do not use the Gather Supabase project or keys. Without the standalone secrets, the hosted page runs Local demo and shows a setup message if online play is attempted.
 
 ## Rules and scoring
 

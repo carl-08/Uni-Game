@@ -83,7 +83,11 @@ export default function OnlineRoom({ initialCode = '', initialRole = '', onBack 
   };
 
   const act = async (rpcName: string, args: Record<string, unknown> = {}): Promise<boolean> => {
-    if (!dixitSupabase || !roomId) return false;
+    if (!dixitSupabase) {
+      setError('Online play is not configured on this hosted app. Add the standalone VITE_DIXIT_SUPABASE_URL and VITE_DIXIT_SUPABASE_ANON_KEY GitHub Actions secrets, then redeploy. Local demo still works.');
+      return false;
+    }
+    if (!roomId) { setError('This room is not connected. Refresh or rejoin using the room code.'); return false; }
     setBusy(true); setError(''); setNotice('');
     try {
       const { error: actionError } = await dixitSupabase.rpc(rpcName as never, { p_room_id: roomId, ...args } as never);
