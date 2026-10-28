@@ -34,7 +34,7 @@ export function newGame(names: string[]): Game {
   if (names.some(name => !name.trim())) throw new Error('Every player needs a display name.');
   const deck = shuffle(makeDeck());
   const players = names.map((name, index) => ({ id: `p${index}`, name: name.trim().slice(0, 20), score: 0, hand: deck.splice(0, handSize(names.length)) }));
-  return { players, deck, discard: [], round: 1, storytellerIndex: 0, phase: 'clue', clue: '', storyCardId: '', submissions: {}, entries: [], votes: {}, summary: [] };
+  return { players, deck, discard: [], round: 1, storytellerIndex: Math.floor(Math.random() * players.length), phase: 'clue', clue: '', storyCardId: '', submissions: {}, entries: [], votes: {}, summary: [] };
 }
 
 export function storyteller(game: Game): Player { return game.players[game.storytellerIndex]; }

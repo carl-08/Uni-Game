@@ -1,10 +1,10 @@
 # Card artwork resolution status
 
-The original 84 PNG sources remain unchanged. Their WebP app copies are quality-optimized at each source image's original dimensions; this is format and size optimization, not resolution upscaling. The available image workflow could not reliably upscale the full deck while preserving each individual scene, so no card is marked high resolution. Every card below remains below 1024 x 1536 px.
+The original 84 PNG sources remain unchanged. `card-001` now has an additional image-generated high-resolution restoration, saved as a PNG source and an optimized WebP app asset. It measures 1024 x 1536 px and is loaded in place of its thumbnail in the catalog. The other 83 cards remain at their original source dimensions; they have not been upscaled, so they are not marked high resolution.
 
 | Card ID | Source dimensions | 1024 x 1536 upgrade |
 |---|---:|---|
-| `card-001` | 291 x 372 px | Not upgraded |
+| `card-001` | 291 x 372 px | Upgraded to 1024 x 1536 px (`cards-hires/card-001.webp`; source: `cards-hires-source/card-001.png`) |
 | `card-002` | 294 x 372 px | Not upgraded |
 | `card-003` | 293 x 372 px | Not upgraded |
 | `card-004` | 291 x 375 px | Not upgraded |

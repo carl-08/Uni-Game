@@ -125,7 +125,7 @@ begin
     scores:=scores||jsonb_build_object(players[i]::text,0); pos:=pos+6;
   end loop;
   update public.dixit_rooms set status='playing',updated_at=now(),state=jsonb_build_object(
-    'phase','clue','round',1,'storyteller_id',players[1],'hands',hands,'deck',to_jsonb(cards[pos:]),'discard','[]'::jsonb,
+    'phase','clue','round',1,'storyteller_id',players[1+floor(random()*n)::int],'hands',hands,'deck',to_jsonb(cards[pos:]),'discard','[]'::jsonb,
     'scores',scores,'submissions','[]'::jsonb,'entries','[]'::jsonb,'votes','[]'::jsonb,'summary','[]'::jsonb)
     where id=p_room_id;
 end $$;
