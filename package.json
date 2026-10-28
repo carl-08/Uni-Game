@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && npm run build --prefix dixit-standalone -- --outDir ../dist/dixit-standalone --base /Uni-Game/dixit-standalone/",
     "preview": "vite preview",
     "test": "node --test scripts/*.test.mjs"
   },

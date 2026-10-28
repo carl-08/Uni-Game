@@ -20,6 +20,10 @@ Requires Node.js 20+ and npm.
 
 Without Supabase credentials, profile edits are saved only in the current browser's local storage. This fallback does not sync across devices.
 
+## Dreamweaver prototype
+
+Open the Dreamweaver game card, then choose **Open 84-card prototype** to view the separate story-card prototype. GitHub Pages publishes it at `https://carl-08.github.io/Uni-Game/dixit-standalone/`. The normal Dreamweaver room option continues to use Gather's multiplayer room flow.
+
 ## Connect Supabase
 
 1. Create a project at https://supabase.com/dashboard.
