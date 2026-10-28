@@ -22,7 +22,7 @@ Without Supabase credentials, profile edits are saved only in the current browse
 
 ## Dreamweaver prototype
 
-Open the Dreamweaver game card, then choose **Open 84-card prototype** to view the separate story-card prototype. GitHub Pages publishes it at `https://carl-08.github.io/Uni-Game/dixit-standalone/`. The normal Dreamweaver room option continues to use Gather's multiplayer room flow.
+Open the Dreamweaver game card, then choose **Open 84-card prototype** to view the separate story-card prototype. GitHub Pages publishes it at `https://carl-08.github.io/Uni-Game/dixit-standalone/`. Gather's multiplayer room now uses the original artwork for its existing 48-card catalog; the separate preview shows all 84 cards. The room continues to use Gather's multiplayer flow.
 
 ## Connect Supabase
 
