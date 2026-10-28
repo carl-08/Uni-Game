@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowLeft, ArrowRight, Check, CircleHelp, Crown, Eye, Feather, Heart, RefreshCw, Sparkles, Users, Volume2 } from 'lucide-react';
 import { castVote, giveClue, makeDeck, newGame, nextRound, submitCards, storyteller, type Card, type Game } from './game';
+import OnlineRoom from './OnlineRoom';
 
 function CardArt({ card, small = false, selected = false, disabled = false, onClick, label }: {
   card: Card; small?: boolean; selected?: boolean; disabled?: boolean; onClick?: () => void; label?: string;
@@ -23,6 +24,7 @@ export default function App() {
   const [clue, setClue] = useState('');
   const [name, setName] = useState('Carl');
   const [playerCount, setPlayerCount] = useState(3);
+  const [demoNotice, setDemoNotice] = useState('');
   const [error, setError] = useState('');
   const [showLobby, setShowLobby] = useState(true);
   const [help, setHelp] = useState(false);
@@ -39,6 +41,7 @@ export default function App() {
     setShowLobby(false);
     setSelected([]);
     setError('');
+    setDemoNotice(playerCount === 2 ? 'Two-player test mode: with one voter, the storyteller cannot score under the current scoring rules.' : '');
   };
 
   const act = (action: () => Game) => {
@@ -108,6 +111,11 @@ export default function App() {
   const roundTotals = game?.summary ?? [];
   const leaders = game ? game.players.filter(player => player.score === Math.max(...game.players.map(candidate => candidate.score))) : [];
 
+  if (new URLSearchParams(window.location.search).get('online') === '1') {
+    const params = new URLSearchParams(window.location.search);
+    return <OnlineRoom initialCode={params.get('room') ?? ''} initialRole={params.get('role') ?? ''} onBack={() => { window.location.href = window.location.pathname; }} />;
+  }
+
   // Keep demo views in sync across tabs in this browser. Each screen still renders
   // only its own view; remote devices need a configured room backend.
   useEffect(() => {
@@ -144,13 +152,14 @@ export default function App() {
         <input id="player-name" className="name-input" value={name} maxLength={20} onChange={event => setName(event.target.value)} placeholder="Type your name"/>
         <label className="field-label count-label" htmlFor="player-count">PLAYERS AT THE TABLE</label>
         <select id="player-count" className="name-input player-count" value={playerCount} onChange={event => setPlayerCount(Number(event.target.value))}>
-          {Array.from({ length: 6 }, (_, index) => index + 3).map(count => <option key={count} value={count}>{count} players</option>)}
+          {Array.from({ length: 7 }, (_, index) => index + 2).map(count => <option key={count} value={count}>{count} players</option>)}
         </select>
         <button className="primary start-button" onClick={start}><span>Take your seat</span><ArrowRight size={18}/></button>
         <button className="gallery-link" onClick={() => setGallery(true)}><Eye size={15}/> Browse all 84 illustrated cards</button>
-        <button className="online-link" onClick={() => setError('Online rooms are not connected yet. The local table is ready to play.') }><Users size={15}/> Online rooms</button>
+        <button className="online-link" onClick={() => { window.location.href = `${window.location.pathname}?online=1`; }}><Users size={15}/> Online rooms</button>
         {error && <p className="inline-error">{error}</p>}
-        <div className="welcome-foot"><span><Users size={15}/> 3–8 players</span><span><Heart size={14}/> One word, one card</span></div>
+        {demoNotice&&<p className="test-notice">{demoNotice}</p>}
+        <div className="welcome-foot"><span><Users size={15}/> 2–8 players</span><span><Heart size={14}/> One word, one card</span></div>
       </div>
       <div className="welcome-art" aria-label="Dreamlike illustrated cards on a dark table">
         <div className="orbital orbit-one"/><div className="orbital orbit-two"/><div className="moon">☾</div>

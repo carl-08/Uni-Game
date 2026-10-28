@@ -1,8 +1,8 @@
 # Little Fables — standalone story-card game
 
-This folder is a self-contained Vite + React + TypeScript prototype. It has its own entry point and styles and does not connect to Gather's site, room system, database, or admin dashboard.
+This is a separate Vite + React + TypeScript app. It does not import Gather components or use Gather's database, migrations, Edge Functions, or room system. The 84 original local card images remain replaceable through `src/artCatalog.ts`.
 
-## Run locally
+## Run the local demo
 
 From this folder:
 
@@ -11,18 +11,43 @@ npm install
 npm run dev
 ```
 
-The local demo works without any credentials. Choose 3–8 seats and the remaining players are demo players, so you can move through clue, card selection, voting, scoring, and game-over states. Enter a display name on the start screen.
+Choose **Take your seat** for a local game with demo players. It works without Supabase and supports 2–8 players. In two-player test mode, one player votes, so the storyteller always scores 0 under the current rules; the other player gets 2 points. The game warns about this when it starts.
 
-To make a production build, run `npm run build`. To preview that build, run `npm run preview`.
+## Set up online rooms
 
-## Open from Gather
+Online play uses its own Supabase project. Do not use Gather's Supabase project or credentials.
 
-The Gather game list includes Dreamweaver. Open its details and choose **Open 84-card prototype** to view this app as a separate page. On GitHub Pages it is published under `/Uni-Game/dixit-standalone/`; the main Gather site build creates that page alongside the main app.
+1. Create a new Supabase project for this prototype.
+2. In Supabase Authentication settings, enable **Anonymous sign-ins**.
+3. Copy `.env.example` to `.env.local` inside this folder. Add the new project's URL and public anon key as `VITE_DIXIT_SUPABASE_URL` and `VITE_DIXIT_SUPABASE_ANON_KEY`.
+4. In the new project's SQL Editor, run `supabase/schema.sql`.
+5. Restart `npm run dev`. Choose **Online rooms**.
 
-## Online rooms
+`dixit_settings.minimum_players` is the one setting for the start limit. It starts at 2 for testing. Change the row to 3 when the game is ready for a three-player minimum:
 
-Online room networking is not wired up yet. The player view and shared laptop display can be opened in separate tabs with `?view=player` and `?view=display`; they sync through this browser's local storage and BroadcastChannel for a local presentation. This does not sync to a different device or provide online rooms. The `.env.example` reserves names for a dedicated Supabase project; it contains placeholders only. No Gather credentials are read by this app. Remote multiplayer needs a standalone server-side room protocol that returns only the requesting player's hand and withholds card owners and votes until reveal.
+```sql
+update public.dixit_settings set minimum_players = 3 where singleton = true;
+```
 
-## Rules and artwork
+### Host laptop
 
-The custom prototype scoring and round flow live in `src/game.ts`: six cards per player, one-word clues, one submitted card per non-storyteller, and the requested 30-point scoring rules. The full 84-card original illustration set lives in `public/cards/` with stable `card-001.png` through `card-084.png` filenames. `src/artCatalog.ts` maps each stable ID to its title and file. The labeled full-deck contact sheet is `public/card-contact-sheet.jpg` and can be opened at `/card-contact-sheet.jpg` while the dev server is running. Add future illustrations by extending the catalog. The standalone stylesheet uses local color tokens guided by Gather’s dark, lime, cream, and muted accent palette; it does not import the Gather stylesheet.
+Choose **Create host display**. The host is display-only and never gets a player seat, hand, score, turn, or vote. Share the room code with players. The waiting list updates while players join. Start manually after the minimum number of players have joined; the list locks when the game starts. The host can end the room or reopen the host URL in the same signed-in browser to reconnect.
+
+### Player phones
+
+Open the same standalone app, choose **Online rooms**, enter a display name and room code, then join. The app remembers the anonymous Supabase session after a refresh. Each phone receives only that player's own hand from the room RPC. During voting, everyone receives the shuffled anonymous card list; owner IDs and votes are withheld until the server resolves the round.
+
+Room screens poll the standalone RPC every 1.8 seconds, so the shared display and phones follow phase changes without exposing private room state through direct table reads. Only the RPC functions can read or change room tables.
+
+## Build and preview
+
+```sh
+npm run build
+npm run preview
+```
+
+The local demo remains available when the online environment values are absent. The GitHub Pages build also needs the standalone `VITE_DIXIT_SUPABASE_URL` and `VITE_DIXIT_SUPABASE_ANON_KEY` values set for its build step to enable online rooms; without them, the hosted page still runs the local demo.
+
+## Rules and scoring
+
+The scoring and local round resolution live in `src/game.ts`. Online scoring and room privacy are enforced by the dedicated SQL RPC functions in `supabase/schema.sql`. Both modes use six cards per player, a one-word clue, one submitted card per non-storyteller, anonymous shuffled voting, the requested all-or-none scoring rule, a 30-point end condition, and tied wins. The online start minimum is 2 players for testing and the maximum is 8.

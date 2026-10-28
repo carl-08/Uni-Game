@@ -30,7 +30,7 @@ export function shuffle<T>(items: T[]): T[] {
 export function handSize(_playerCount: number): number { return 6; }
 
 export function newGame(names: string[]): Game {
-  if (names.length < 3 || names.length > 8) throw new Error('A game needs 3 to 8 players.');
+  if (names.length < 2 || names.length > 8) throw new Error('A game needs 2 to 8 players in the current test version.');
   if (names.some(name => !name.trim())) throw new Error('Every player needs a display name.');
   const deck = shuffle(makeDeck());
   const players = names.map((name, index) => ({ id: `p${index}`, name: name.trim().slice(0, 20), score: 0, hand: deck.splice(0, handSize(names.length)) }));
