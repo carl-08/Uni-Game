@@ -216,7 +216,10 @@ begin
   if s->>'phase'<>'results' then raise exception 'round_not_ready'; end if;
   select array_agg(user_id order by seat_order) into players from public.dixit_members where room_id=p_room_id;
   n:=array_length(players,1); previous_id:=(s->>'storyteller_id')::uuid;
-  select coalesce(array_position(players,previous_id),0) into next_index;
+  if n is null or n<2 or n>8 then raise exception 'invalid_player_count'; end if;
+  if exists(select 1 from jsonb_each(coalesce(s->'hands','{}'::jsonb)) h where jsonb_array_length(h.value)<>6) then raise exception 'invalid_hand_size'; end if;
+  select array_position(players,previous_id) into next_index;
+  if next_index is null then raise exception 'storyteller_missing'; end if;
   next_index:=case when next_index>=n then 1 else next_index+1 end; next_id:=players[next_index];
   s:=s||jsonb_build_object('phase','clue','round',(s->>'round')::int+1,'last_storyteller',previous_id,'storyteller_id',next_id,
     'clue',null,'story_card_id',null,'submissions','[]'::jsonb,'entries','[]'::jsonb,'votes','[]'::jsonb,'summary','[]'::jsonb);

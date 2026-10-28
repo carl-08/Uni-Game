@@ -8,9 +8,9 @@ function CardArt({ card, small = false, selected = false, disabled = false, onCl
 }) {
   return <button type="button" aria-label={label ?? `Card: ${card.title}${selected ? ', selected' : ''}`} aria-pressed={selected} disabled={disabled} onClick={onClick}
     className={`art-card ${card.art ? 'has-art' : ''} ${small ? 'small' : ''} ${selected ? 'selected' : ''} ${disabled ? 'unselectable' : ''}`}
-    style={{ '--c1': card.colors[0], '--c2': card.colors[1], ...(card.art ? { '--card-art': `url("${card.art}")` } : {}) } as React.CSSProperties}>
+    style={{ '--c1': card.colors[0], '--c2': card.colors[1] } as React.CSSProperties}>
     <span className="art-sky"/><span className={`art-shape ${card.shape}`}><i>{card.motif}</i></span><span className="art-spark">✧</span>
-    <span className="art-title">{card.title}</span>{selected && <span className="picked"><Check size={14}/></span>}
+    {card.art ? <img className="art-card-image" src={card.art} alt="" loading="lazy" decoding="async"/> : null}{selected && <span className="picked"><Check size={14}/></span>}
   </button>;
 }
 
@@ -243,7 +243,7 @@ export default function App() {
                 <b>+{item.total}</b>
               </div>)}
             </div>
-            <button className="primary next-button" onClick={() => setGame(nextRound(game))}>Next storyteller <ArrowRight size={16}/></button>
+            <button className="primary next-button" onClick={() => { try { setGame(nextRound(game)); setSelected([]); setClue(''); setError(''); } catch (reason) { setError(reason instanceof Error ? reason.message : 'Could not start the next round. Please try again.'); } }}>Next storyteller <ArrowRight size={16}/></button>
           </div>}
 
           {game.phase === 'over' && <div className="phase-panel over-panel">

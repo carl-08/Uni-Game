@@ -27,5 +27,5 @@ const titles = [
 // IDs and file paths are stable. Add new illustrations to this list and public/cards.
 export const illustratedCards: IllustratedCard[] = titles.map((title, index) => {
   const id = `card-${String(index + 1).padStart(3, '0')}`;
-  return { id, title, art: `/cards/${id}.png` };
+  return { id, title, art: `/cards-webp/${id}.webp` };
 });

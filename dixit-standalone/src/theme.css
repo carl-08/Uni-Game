@@ -188,3 +188,5 @@ body { background: radial-gradient(ellipse at 50% -20%, #293020 0, transparent 4
 .ended-room h2 { color:var(--warm); font:600 24px var(--display); }
 @media(max-width:850px) { .online-room-layout { grid-template-columns:minmax(0,1fr) 235px; gap:18px; } .online-lobby { gap:30px; } }
 @media(max-width:640px) { .online-lobby { grid-template-columns:minmax(0,1fr); padding:32px 0 45px; gap:20px; } .online-intro h1 { font-size:48px; } .online-room-layout { grid-template-columns:minmax(0,1fr); gap:16px; } .room-waiting { padding:19px 14px; } .room-code-large { gap:10px; } .room-code-large>strong { font-size:30px; letter-spacing:2px; } .online-phase-panel .hand-row { grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; } .reconnect-card { grid-template-columns:1fr; } .reconnect-card .secondary-button { margin-top:8px; } .online-game-head { padding-top:25px; } .online-error { margin:12px 0; } }
+
+.art-card.has-art{position:relative;overflow:hidden;background-image:none!important}.art-card-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}.art-card.has-art .art-title{display:none}

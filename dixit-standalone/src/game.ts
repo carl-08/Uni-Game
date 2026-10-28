@@ -107,7 +107,8 @@ export function nextRound(game: Game): Game {
   if (game.phase !== 'results') throw new Error('The round is still in progress.');
   const previousStoryteller = storyteller(game);
   const usedCardIds = new Set(game.entries.map(entry => entry.card.id));
-  const discard = [...game.discard, ...game.entries.map(entry => entry.card)];
+  // resolveRound already placed these cards in the discard pile.
+  const discard = [...game.discard];
   const drawPile = [...game.deck];
   const drawCard = (): Card | undefined => {
     if (drawPile.length === 0 && discard.length) drawPile.push(...shuffle(discard.splice(0)));

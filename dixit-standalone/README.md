@@ -51,3 +51,7 @@ The local demo remains available when the online environment values are absent. 
 ## Rules and scoring
 
 The scoring and local round resolution live in `src/game.ts`. Online scoring and room privacy are enforced by the dedicated SQL RPC functions in `supabase/schema.sql`. Both modes use six cards per player, a one-word clue, one submitted card per non-storyteller, anonymous shuffled voting, the requested all-or-none scoring rule, a 30-point end condition, and tied wins. The online start minimum is 2 players for testing and the maximum is 8.
+
+### Card artwork
+
+The original PNG sources are in `public/cards/`. The app uses the matching lazy-loaded WebP files in `public/cards-webp/`; run `npm run assets:webp` after replacing or adding source PNGs. The conversion keeps the source dimensions and the PNG originals are not changed. The current 84 source images are about 283–338 × 348–410 pixels, so none meets the requested 1024 × 1536 high-resolution size. See `ARTWORK_STATUS.md` for every card’s measured dimensions. They have not been stretched or described as high resolution.
